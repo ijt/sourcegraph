@@ -8,6 +8,7 @@ import { PageTitle } from '../components/PageTitle'
 import { ThemeProps } from '../theme'
 import { getExternalService } from './externalServices'
 import { SiteAdminExternalServiceForm } from './SiteAdminExternalServiceForm2'
+import GithubCircleIcon from 'mdi-react/GithubCircleIcon'
 
 interface SiteAdminAddExternalServiceProps extends ThemeProps {
     history: H.History
@@ -26,8 +27,8 @@ export class SiteAdminAddExternalServicePage extends React.Component<
             <div className="add-external-service-page">
                 <PageTitle title={externalService.title} />
                 <h1>Add {externalService.title}</h1>
-                {externalService.helpElement ? (
-                    <div className="alert alert-info">{externalService.helpElement}</div>
+                {externalService.longDescription ? (
+                    <div className="alert alert-info">{externalService.longDescription}</div>
                 ) : (
                     undefined
                 )}
@@ -122,15 +123,57 @@ export class SiteAdminAddExternalServicesPage extends React.Component<
                 <div className="add-external-services-page">
                     <PageTitle title="Choose an external service type to add" />
                     <h1>Add external service</h1>
+                    <p>Choose an external service to add to Sourcegraph.</p>
                     {buttons.map((button, i) => (
-                        <LinkOrButton key={i} to={`?kind=${button.kind.toLowerCase()}`}>
-                            <button className="btn btn-primary e2e-add-external-service-button add-external-services-page__button">
-                                {button.text}
-                            </button>
-                        </LinkOrButton>
+                        // <LinkOrButton key={i} to={`?kind=${button.kind.toLowerCase()}`}>
+                        //     <button className="btn btn-primary e2e-add-external-service-button add-external-services-page__button">
+                        //         {button.text}
+                        //     </button>
+                        // </LinkOrButton>
+                        <div className="external-service-button">
+                            <div className="external-service-button__logo">
+                                <GithubCircleIcon size={50} className="external-services-button__logo-icon" />
+                            </div>
+                            <div className="external-service-button__main">
+                                <h2 className="external-service-button__main-header">GitHub</h2>
+                                <p className="external-service-button__main-body">
+                                    Add GitHub.com repositories to Sourcegraph.
+                                </p>
+                            </div>
+                        </div>
                     ))}
                 </div>
             )
         }
     }
 }
+
+export const PhabricatorIcon: React.FunctionComponent<void> = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        height="120"
+        width="120"
+        viewBox="-147 -147 294 294"
+    >
+        <g id="a">
+            <g id="b">
+                <g id="c">
+                    <path id="e" d="m7.2-47-1.2-21h-12l-1.236 21" />
+                    <use xlinkHref="#e" transform="scale(1,-1)" />
+                </g>
+                <use xlinkHref="#c" transform="rotate(90)" />
+            </g>
+            <use xlinkHref="#b" transform="rotate(45)" />
+        </g>
+        <use xlinkHref="#a" transform="rotate(22.5)" />
+        <circle r="23" />
+        <g fill="none" stroke="#000">
+            <path
+                stroke-width="14"
+                d="m0 87c-66 0-117-54-138.5-87 21.5-33 72.5-87 138.5-87s117 54 138.5 87c-21.5 33-72.5 87-138.5 87z"
+            />
+            <circle r="47.5" stroke-width="19" />
+        </g>
+    </svg>
+)

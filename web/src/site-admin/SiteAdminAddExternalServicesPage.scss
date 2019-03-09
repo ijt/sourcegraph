@@ -12,3 +12,39 @@
         font-weight: bold;
     }
 }
+
+.external-service-button {
+    display: flex;
+    margin-bottom: 1rem;
+    border-top: 1px solid $color-light-border;
+    border-right: 1px solid $color-light-border;
+    border-bottom: 1px solid $color-light-border;
+
+    &__logo {
+        flex: 0 0 0;
+        // padding: 0.25rem;
+        border-left: 2px solid blue;
+        display: flex;
+        align-items: center;
+    }
+    &__logo-icon {
+        // align-content: center;
+
+        // svg {
+        //     margin: 0 auto;
+        //     align-content: center;
+        // }
+    }
+    &__main {
+        flex: 1 1 0;
+        margin-left: 0.25rem;
+    }
+    &__main-header {
+        margin: 0;
+        font-size: 1.25em;
+    }
+    &__main-body {
+        margin-top: 0.0625rem;
+        font-size: 0.75em;
+    }
+}

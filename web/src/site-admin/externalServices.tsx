@@ -17,7 +17,10 @@ export interface ExternalServiceMetadata {
      */
     displayName: string
 
-    helpElement?: JSX.Element | string
+    actionName?: string // TODO: make required
+    shortDescription?: string // TODO: make required
+
+    longDescription?: JSX.Element | string
     title: string
 }
 
@@ -25,7 +28,8 @@ export const GITHUB_EXTERNAL_SERVICE: ExternalServiceMetadata = {
     title: 'GitHub repositories',
     jsonSchema: githubSchemaJSON,
     displayName: 'GitHub',
-    helpElement: (
+    actionName: 'Add repositories from GitHub',
+    longDescription: (
         <span>
             Adding this configuration enables Sourcegraph to sync repositories from GitHub. Click the "quick configure"
             buttons for common actions or directly edit the JSON configuration.{' '}
