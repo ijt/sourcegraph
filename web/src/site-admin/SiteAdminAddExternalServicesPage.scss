@@ -22,29 +22,24 @@
 
     &__logo {
         flex: 0 0 0;
-        // padding: 0.25rem;
         border-left: 2px solid blue;
+        padding: 0.25rem;
         display: flex;
         align-items: center;
     }
-    &__logo-icon {
-        // align-content: center;
-
-        // svg {
-        //     margin: 0 auto;
-        //     align-content: center;
-        // }
-    }
     &__main {
         flex: 1 1 0;
+        margin-top: 0.25rem;
         margin-left: 0.25rem;
     }
     &__main-header {
         margin: 0;
+        padding: 0;
         font-size: 1.25em;
     }
     &__main-body {
-        margin-top: 0.0625rem;
+        margin: 0;
+        padding: 0;
         font-size: 0.75em;
     }
 }

@@ -1,14 +1,13 @@
 import * as H from 'history'
+import GithubCircleIcon from 'mdi-react/GithubCircleIcon'
 import React from 'react'
 import { noop } from 'rxjs'
-import { LinkOrButton } from '../../../shared/src/components/LinkOrButton'
 import { ExternalServiceKind } from '../../../shared/src/graphql/schema'
 import * as GQL from '../../../shared/src/graphql/schema'
 import { PageTitle } from '../components/PageTitle'
 import { ThemeProps } from '../theme'
-import { getExternalService } from './externalServices'
+import { ALL_ADD_EXTERNAL_SERVICES, getExternalService } from './externalServices'
 import { SiteAdminExternalServiceForm } from './SiteAdminExternalServiceForm2'
-import GithubCircleIcon from 'mdi-react/GithubCircleIcon'
 
 interface SiteAdminAddExternalServiceProps extends ThemeProps {
     history: H.History
@@ -59,12 +58,6 @@ interface SiteAdminAddExternalServicesProps extends ThemeProps {
 
 interface SiteAdminAddExternalServicesState {}
 
-interface ButtonProps {
-    kind: ExternalServiceKind
-    text: string
-    secondaryKind?: string // TODO(beyang): e.g., github.com vs GH Enterprise, populate with different default config
-}
-
 export class SiteAdminAddExternalServicesPage extends React.Component<
     SiteAdminAddExternalServicesProps,
     SiteAdminAddExternalServicesState
@@ -85,46 +78,47 @@ export class SiteAdminAddExternalServicesPage extends React.Component<
         if (kind) {
             return <SiteAdminAddExternalServicePage {...this.props} kind={kind} />
         } else {
-            const buttons: ButtonProps[] = [
-                {
-                    kind: ExternalServiceKind.AWSCODECOMMIT,
-                    text: 'Add repositories from AWS CodeCommit',
-                },
-                {
-                    kind: ExternalServiceKind.GITHUB,
-                    text: 'Add repositories from GitHub Enterprise',
-                },
-                {
-                    kind: ExternalServiceKind.GITHUB,
-                    text: 'Add repositories from GitHub.com',
-                },
-                {
-                    kind: ExternalServiceKind.GITLAB,
-                    text: 'Add projects from GitLab',
-                },
-                {
-                    kind: ExternalServiceKind.BITBUCKETSERVER,
-                    text: 'Add repositories from Bitbucket Server',
-                },
-                {
-                    kind: ExternalServiceKind.GITOLITE,
-                    text: 'Add repositories from Gitolite',
-                },
-                {
-                    kind: ExternalServiceKind.OTHER,
-                    text: 'Add repositories by Git clone URL',
-                },
-                {
-                    kind: ExternalServiceKind.PHABRICATOR,
-                    text: 'Link with Phabricator',
-                },
-            ]
+            const externalServices = ALL_ADD_EXTERNAL_SERVICES
+            // const buttons: ButtonProps[] = [
+            //     {
+            //         kind: ExternalServiceKind.AWSCODECOMMIT,
+            //         text: 'Add repositories from AWS CodeCommit',
+            //     },
+            //     {
+            //         kind: ExternalServiceKind.GITHUB,
+            //         text: 'Add repositories from GitHub Enterprise',
+            //     },
+            //     {
+            //         kind: ExternalServiceKind.GITHUB,
+            //         text: 'Add repositories from GitHub.com',
+            //     },
+            //     {
+            //         kind: ExternalServiceKind.GITLAB,
+            //         text: 'Add projects from GitLab',
+            //     },
+            //     {
+            //         kind: ExternalServiceKind.BITBUCKETSERVER,
+            //         text: 'Add repositories from Bitbucket Server',
+            //     },
+            //     {
+            //         kind: ExternalServiceKind.GITOLITE,
+            //         text: 'Add repositories from Gitolite',
+            //     },
+            //     {
+            //         kind: ExternalServiceKind.OTHER,
+            //         text: 'Add repositories by Git clone URL',
+            //     },
+            //     {
+            //         kind: ExternalServiceKind.PHABRICATOR,
+            //         text: 'Link with Phabricator',
+            //     },
+            // ]
             return (
                 <div className="add-external-services-page">
                     <PageTitle title="Choose an external service type to add" />
                     <h1>Add external service</h1>
                     <p>Choose an external service to add to Sourcegraph.</p>
-                    {buttons.map((button, i) => (
+                    {externalServices.map(externalService => (
                         // <LinkOrButton key={i} to={`?kind=${button.kind.toLowerCase()}`}>
                         //     <button className="btn btn-primary e2e-add-external-service-button add-external-services-page__button">
                         //         {button.text}
@@ -135,7 +129,9 @@ export class SiteAdminAddExternalServicesPage extends React.Component<
                                 <GithubCircleIcon size={50} className="external-services-button__logo-icon" />
                             </div>
                             <div className="external-service-button__main">
-                                <h2 className="external-service-button__main-header">GitHub</h2>
+                                <h2 className="external-service-button__main-header">
+                                    {externalService.title || externalService.externalService.title}
+                                </h2>
                                 <p className="external-service-button__main-body">
                                     Add GitHub.com repositories to Sourcegraph.
                                 </p>
