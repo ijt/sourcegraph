@@ -1,13 +1,16 @@
 import * as H from 'history'
-import GithubCircleIcon from 'mdi-react/GithubCircleIcon'
+import { map } from 'lodash'
 import React from 'react'
 import { noop } from 'rxjs'
-import { ExternalServiceKind } from '../../../shared/src/graphql/schema'
+import { LinkOrButton } from '../../../shared/src/components/LinkOrButton'
 import * as GQL from '../../../shared/src/graphql/schema'
+import { ExternalServiceKind } from '../../../shared/src/graphql/schema'
 import { PageTitle } from '../components/PageTitle'
 import { ThemeProps } from '../theme'
-import { ALL_ADD_EXTERNAL_SERVICES, getExternalService } from './externalServices'
+import { AddExternalServiceMetadata, ALL_ADD_EXTERNAL_SERVICES, getExternalService } from './externalServices'
 import { SiteAdminExternalServiceForm } from './SiteAdminExternalServiceForm2'
+import { flatMap } from 'rxjs/operators'
+import { ExternalServiceButton } from './ExternalServiceButton'
 
 interface SiteAdminAddExternalServiceProps extends ThemeProps {
     history: H.History
@@ -73,103 +76,34 @@ export class SiteAdminAddExternalServicesPage extends React.Component<
         return kind && isKnownKind(kind) ? kind : null
     }
 
+    private static addServiceURL(addService: AddExternalServiceMetadata): string {
+        const components: { [key: string]: string } = {
+            kind: encodeURIComponent(addService.serviceKind.toLowerCase()),
+        }
+        if (addService.qualifier) {
+            components.qualifier = encodeURIComponent(addService.qualifier)
+        }
+        return '?' + map(components, (v, k) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
+    }
+
     public render(): JSX.Element | null {
         const kind = this.getExternalServiceKind()
         if (kind) {
             return <SiteAdminAddExternalServicePage {...this.props} kind={kind} />
         } else {
-            const externalServices = ALL_ADD_EXTERNAL_SERVICES
-            // const buttons: ButtonProps[] = [
-            //     {
-            //         kind: ExternalServiceKind.AWSCODECOMMIT,
-            //         text: 'Add repositories from AWS CodeCommit',
-            //     },
-            //     {
-            //         kind: ExternalServiceKind.GITHUB,
-            //         text: 'Add repositories from GitHub Enterprise',
-            //     },
-            //     {
-            //         kind: ExternalServiceKind.GITHUB,
-            //         text: 'Add repositories from GitHub.com',
-            //     },
-            //     {
-            //         kind: ExternalServiceKind.GITLAB,
-            //         text: 'Add projects from GitLab',
-            //     },
-            //     {
-            //         kind: ExternalServiceKind.BITBUCKETSERVER,
-            //         text: 'Add repositories from Bitbucket Server',
-            //     },
-            //     {
-            //         kind: ExternalServiceKind.GITOLITE,
-            //         text: 'Add repositories from Gitolite',
-            //     },
-            //     {
-            //         kind: ExternalServiceKind.OTHER,
-            //         text: 'Add repositories by Git clone URL',
-            //     },
-            //     {
-            //         kind: ExternalServiceKind.PHABRICATOR,
-            //         text: 'Link with Phabricator',
-            //     },
-            // ]
+            const addExternalServices = ALL_ADD_EXTERNAL_SERVICES
             return (
                 <div className="add-external-services-page">
                     <PageTitle title="Choose an external service type to add" />
                     <h1>Add external service</h1>
                     <p>Choose an external service to add to Sourcegraph.</p>
-                    {externalServices.map(externalService => (
-                        // <LinkOrButton key={i} to={`?kind=${button.kind.toLowerCase()}`}>
-                        //     <button className="btn btn-primary e2e-add-external-service-button add-external-services-page__button">
-                        //         {button.text}
-                        //     </button>
-                        // </LinkOrButton>
-                        <div className="external-service-button">
-                            <div className="external-service-button__logo">
-                                <GithubCircleIcon size={50} className="external-services-button__logo-icon" />
-                            </div>
-                            <div className="external-service-button__main">
-                                <h2 className="external-service-button__main-header">
-                                    {externalService.title || externalService.externalService.title}
-                                </h2>
-                                <p className="external-service-button__main-body">
-                                    Add GitHub.com repositories to Sourcegraph.
-                                </p>
-                            </div>
-                        </div>
+                    {addExternalServices.map((addService, i) => (
+                        <LinkOrButton key={i} to={SiteAdminAddExternalServicesPage.addServiceURL(addService)}>
+                            <ExternalServiceButton {...addService} />
+                        </LinkOrButton>
                     ))}
                 </div>
             )
         }
     }
 }
-
-export const PhabricatorIcon: React.FunctionComponent<void> = () => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        height="120"
-        width="120"
-        viewBox="-147 -147 294 294"
-    >
-        <g id="a">
-            <g id="b">
-                <g id="c">
-                    <path id="e" d="m7.2-47-1.2-21h-12l-1.236 21" />
-                    <use xlinkHref="#e" transform="scale(1,-1)" />
-                </g>
-                <use xlinkHref="#c" transform="rotate(90)" />
-            </g>
-            <use xlinkHref="#b" transform="rotate(45)" />
-        </g>
-        <use xlinkHref="#a" transform="rotate(22.5)" />
-        <circle r="23" />
-        <g fill="none" stroke="#000">
-            <path
-                stroke-width="14"
-                d="m0 87c-66 0-117-54-138.5-87 21.5-33 72.5-87 138.5-87s117 54 138.5 87c-21.5 33-72.5 87-138.5 87z"
-            />
-            <circle r="47.5" stroke-width="19" />
-        </g>
-    </svg>
-)
