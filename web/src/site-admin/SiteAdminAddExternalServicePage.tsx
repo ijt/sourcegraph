@@ -11,6 +11,7 @@ import { refreshSiteFlags } from '../site/backend'
 import { ExternalServiceMetadata, getExternalService } from './externalServices'
 import { SiteAdminExternalServiceForm } from './SiteAdminExternalServiceForm'
 
+// NEXT: make this look nice
 interface Props {
     history: H.History
     location: H.Location
